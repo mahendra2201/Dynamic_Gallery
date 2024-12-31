@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retrieve Images</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            margin-top: 20px;
+            color: #333;
+        }
+
+        #div1 {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            padding: 10px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 1000px;
+            min-height: 200px;
+        }
+
+        #div1 > div {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #fff;
+        }
+
+        img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #ddd;
+        }
+
+        #button1 {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        #button2 {
+            background-color: #f0ad4e;
+            color: white;
+        }
+
+        #button3 {
+            background-color: #d9534f;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Image Gallery</h1>
+    <div id="div1">No images yet. Click "Retrieve Images" to load.</div>
+    <button id="button1">Retrieve Images</button>
+    <button id="button2">Delete One</button>
+    <button id="button3">Delete All</button>
+
+    <script>
+        document.getElementById("button1").addEventListener("click", retrive_Images);
+        document.getElementById("button2").addEventListener("click", removedata);
+        document.getElementById("button3").addEventListener("click", removeall);
+
+        function retrive_Images() {
+            let url = `https://jsonplaceholder.typicode.com/photos`;
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    let div1 = document.getElementById("div1");
+                    div1.innerHTML = ""; // Clear existing content
+                    for (let i = 0; i < 10; i++) {
+                        let div2 = document.createElement("div");
+                        let img = document.createElement("img");
+                        img.setAttribute("src", `${data[i].url}`);
+                        div2.appendChild(img);
+                        div1.appendChild(div2);
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching data:", error);
+                });
+        }
+
+        function removedata() {
+            let div1 = document.getElementById("div1");
+            if (div1.lastChild && div1.lastChild.nodeName === "DIV") {
+                div1.removeChild(div1.lastChild);
+            }
+        }
+
+        function removeall() {
+            let div1 = document.getElementById("div1");
+            while (div1.children.length > 0) {
+                div1.removeChild(div1.lastChild);
+            }
+        }
+    </script>
+</body>
+</html>
